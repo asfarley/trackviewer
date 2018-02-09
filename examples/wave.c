@@ -22,6 +22,8 @@
 
 #include <linmath.h>
 
+#define INTERFRAME_HEIGHT_SPACING_PX 5
+
 // Maximum delta T to allow for differential calculations
 #define MAX_DELTA_T 0.01
 
@@ -40,9 +42,10 @@ struct Vertex
     GLfloat r, g, b;
 };
 
-#define GRIDW 50
-#define GRIDH 50
-#define VERTEXNUM (GRIDW*GRIDH)
+#define GRIDW 5
+#define GRIDH 5
+#define GRIDD 2
+#define VERTEXNUM (GRIDW*GRIDH*GRIDD)
 
 #define QUADW (GRIDW - 1)
 #define QUADH (GRIDH - 1)
@@ -68,26 +71,31 @@ struct Vertex vertex[VERTEXNUM];
 
 void init_vertices(void)
 {
-    int x, y, p;
+    int x, y, z, p;
 
     // Place the vertices in a grid
     for (y = 0;  y < GRIDH;  y++)
     {
         for (x = 0;  x < GRIDW;  x++)
         {
-            p = y * GRIDW + x;
+			for(z=0; z< GRIDD; z++)
+			{
+				p = (y * GRIDW * GRIDD) + (x * GRIDD) + z;
 
-            vertex[p].x = (GLfloat) (x - GRIDW / 2) / (GLfloat) (GRIDW / 2);
-            vertex[p].y = (GLfloat) (y - GRIDH / 2) / (GLfloat) (GRIDH / 2);
-            vertex[p].z = 0;
+				vertex[p].x = (GLfloat) (x - GRIDW / 2) / (GLfloat) (GRIDW / 2);
+				vertex[p].y = (GLfloat) (y - GRIDH / 2) / (GLfloat) (GRIDH / 2);
+				//vertex[p].z = INTERFRAME_HEIGHT_SPACING_PX*z;
+				vertex[p].z = 0;
 
-            if ((x % 4 < 2) ^ (y % 4 < 2))
-                vertex[p].r = 0.0;
-            else
-                vertex[p].r = 1.0;
+				if ((x % 4 < 2) ^ (y % 4 < 2))
+					vertex[p].r = 0.0;
+				else
+					vertex[p].r = 1.0;
 
-            vertex[p].g = (GLfloat) y / (GLfloat) GRIDH;
-            vertex[p].b = 1.f - ((GLfloat) x / (GLfloat) GRIDW + (GLfloat) y / (GLfloat) GRIDH) / 2.f;
+				vertex[p].g = (GLfloat) y / (GLfloat) GRIDH;
+				vertex[p].b = 1.f - ((GLfloat) x / (GLfloat) GRIDW + (GLfloat) y / (GLfloat) GRIDH) / 2.f;
+
+			}
         }
     }
 
@@ -95,12 +103,12 @@ void init_vertices(void)
     {
         for (x = 0;  x < QUADW;  x++)
         {
-            p = 4 * (y * QUADW + x);
+				p = 4 * (y * QUADW + x);
 
-            quad[p + 0] = y       * GRIDW + x;     // Some point
-            quad[p + 1] = y       * GRIDW + x + 1; // Neighbor at the right side
-            quad[p + 2] = (y + 1) * GRIDW + x + 1; // Upper right neighbor
-            quad[p + 3] = (y + 1) * GRIDW + x;     // Upper neighbor
+				quad[p + 0] = y       * GRIDW + x;     // Some point
+				quad[p + 1] = y       * GRIDW + x + 1; // Neighbor at the right side
+				quad[p + 2] = (y + 1) * GRIDW + x + 1; // Upper right neighbor
+				quad[p + 3] = (y + 1) * GRIDW + x;     // Upper neighbor
         }
     }
 }
@@ -160,7 +168,7 @@ void draw_scene(GLFWwindow* window)
     glRotatef(beta, 1.0, 0.0, 0.0);
     glRotatef(alpha, 0.0, 0.0, 1.0);
 
-    glDrawElements(GL_QUADS, 4 * QUADNUM, GL_UNSIGNED_INT, quad);
+    glDrawElements(GL_POINTS, 4 * QUADNUM, GL_UNSIGNED_INT, quad);
 
     glfwSwapBuffers(window);
 }
@@ -183,7 +191,7 @@ void init_opengl(void)
     glVertexPointer(3, GL_FLOAT, sizeof(struct Vertex), vertex);
     glColorPointer(3, GL_FLOAT, sizeof(struct Vertex), &vertex[0].r); // Pointer to the first color
 
-    glPointSize(2.0);
+    glPointSize(10.0);
 
     // Background color is black
     glClearColor(0, 0, 0, 0);
@@ -197,14 +205,17 @@ void init_opengl(void)
 void adjust_grid(void)
 {
     int pos;
-    int x, y;
+    int x, y, z;
 
     for (y = 0; y < GRIDH;  y++)
     {
         for (x = 0;  x < GRIDW;  x++)
         {
-            pos = y * GRIDW + x;
-            vertex[pos].z = (float) (p[x][y] * (1.0 / 50.0));
+			for(z = 0; z < GRIDD; z++)
+			{
+				pos = (y * GRIDW * GRIDD) + (x* GRIDD) + z;
+				vertex[pos].z = (float) (p[x][y] * (1.0 / 50.0)) + (z * INTERFRAME_HEIGHT_SPACING_PX);
+			}
         }
     }
 }
