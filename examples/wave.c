@@ -21,8 +21,10 @@
 #include <GLFW/glfw3.h>
 
 #include <linmath.h>
+#include "wave.h"
+#include "LinkedList.h"
 
-#define INTERFRAME_HEIGHT_SPACING_PX 5
+#define INTERFRAME_HEIGHT_SPACING_PX 1
 
 // Maximum delta T to allow for differential calculations
 #define MAX_DELTA_T 0.01
@@ -36,23 +38,18 @@ GLfloat zoom = 2.f;
 double cursorX;
 double cursorY;
 
-struct Vertex
-{
-    GLfloat x, y, z;
-    GLfloat r, g, b;
-};
+
 
 #define GRIDW 5
 #define GRIDH 5
 #define GRIDD 2
 #define VERTEXNUM (GRIDW*GRIDH*GRIDD)
 
-#define QUADW (GRIDW - 1)
-#define QUADH (GRIDH - 1)
-#define QUADNUM (QUADW*QUADH)
-
-GLuint quad[4 * QUADNUM];
+GLuint quad[VERTEXNUM];
 struct Vertex vertex[VERTEXNUM];
+struct Node linked_list;
+struct Vertex * vertex_array = NULL;
+int vertex_array_length = 0;
 
 /* The grid will look like this:
  *
@@ -64,6 +61,16 @@ struct Vertex vertex[VERTEXNUM];
  *      *---*---*
  *      0   1   2
  */
+
+
+void update_vertex_array()
+{
+	ToArray(linked_list, &vertex_array);
+	vertex_array_length = NumberOfElements(linked_list);
+	glVertexPointer(3, GL_FLOAT, sizeof(struct Vertex), vertex_array);
+	glColorPointer(3, GL_FLOAT, sizeof(struct Vertex), &(vertex_array[0].r)); // Pointer to the first color
+}
+
 
 //========================================================================
 // Initialize grid geometry
@@ -78,14 +85,14 @@ void init_vertices(void)
     {
         for (x = 0;  x < GRIDW;  x++)
         {
-			for(z=0; z< GRIDD; z++)
+			for (z = 0; z < GRIDD; z++)
 			{
 				p = (y * GRIDW * GRIDD) + (x * GRIDD) + z;
 
 				vertex[p].x = (GLfloat) (x - GRIDW / 2) / (GLfloat) (GRIDW / 2);
 				vertex[p].y = (GLfloat) (y - GRIDH / 2) / (GLfloat) (GRIDH / 2);
-				//vertex[p].z = INTERFRAME_HEIGHT_SPACING_PX*z;
-				vertex[p].z = 0;
+				vertex[p].z = INTERFRAME_HEIGHT_SPACING_PX*z;
+				//vertex[p].z = 0;
 
 				if ((x % 4 < 2) ^ (y % 4 < 2))
 					vertex[p].r = 0.0;
@@ -99,55 +106,62 @@ void init_vertices(void)
         }
     }
 
-    for (y = 0;  y < QUADH;  y++)
-    {
-        for (x = 0;  x < QUADW;  x++)
-        {
-				p = 4 * (y * QUADW + x);
-
-				quad[p + 0] = y       * GRIDW + x;     // Some point
-				quad[p + 1] = y       * GRIDW + x + 1; // Neighbor at the right side
-				quad[p + 2] = (y + 1) * GRIDW + x + 1; // Upper right neighbor
-				quad[p + 3] = (y + 1) * GRIDW + x;     // Upper neighbor
-        }
+    for (int i=0; i<VERTEXNUM;i++)
+    {        
+		quad[i] =i;
     }
+
+	struct Vertex first;
+	first.x = 0;
+	first.y = 0;
+	first.z = 0;
+	first.r = 100;
+	first.g = 100;
+	first.b = 100;
+
+	linked_list.vertex = &first;
+	linked_list.previous = NULL;
+	linked_list.next = NULL;
+
+	struct Vertex second;
+	struct Vertex third;
+
+	second.x = 1;
+	second.y = 1;
+	second.z = 1;
+	second.r = 200;
+	second.g = 200;
+	second.b = 200;
+
+	third.x = 2;
+	third.y = 2;
+	third.z = 2;
+	third.r = 220;
+	third.g = 220;
+	third.b = 220;
+
+	char debugString[100] = { 0 };
+
+	int count = NumberOfElements(linked_list);
+	sprintf(debugString, "linked_list: %d elements \r\n", count);
+	OutputDebugString(debugString);
+
+	AddElement(&linked_list, &second);
+
+	count = NumberOfElements(linked_list);
+	sprintf(debugString, "linked_list: %d elements \r\n", count);
+	OutputDebugString(debugString);
+
+	AddElement(&linked_list, &third);
+
+	count = NumberOfElements(linked_list);
+	sprintf(debugString, "linked_list: %d elements \r\n", count);
+	OutputDebugString(debugString);
+
+	PrintElements(linked_list);
+
+	update_vertex_array();
 }
-
-double dt;
-double p[GRIDW][GRIDH];
-double vx[GRIDW][GRIDH], vy[GRIDW][GRIDH];
-double ax[GRIDW][GRIDH], ay[GRIDW][GRIDH];
-
-//========================================================================
-// Initialize grid
-//========================================================================
-
-void init_grid(void)
-{
-    int x, y;
-    double dx, dy, d;
-
-    for (y = 0; y < GRIDH;  y++)
-    {
-        for (x = 0; x < GRIDW;  x++)
-        {
-            dx = (double) (x - GRIDW / 2);
-            dy = (double) (y - GRIDH / 2);
-            d = sqrt(dx * dx + dy * dy);
-            if (d < 0.1 * (double) (GRIDW / 2))
-            {
-                d = d * 10.0;
-                p[x][y] = -cos(d * (M_PI / (double)(GRIDW * 4))) * 100.0;
-            }
-            else
-                p[x][y] = 0.0;
-
-            vx[x][y] = 0.0;
-            vy[x][y] = 0.0;
-        }
-    }
-}
-
 
 //========================================================================
 // Draw scene
@@ -168,7 +182,15 @@ void draw_scene(GLFWwindow* window)
     glRotatef(beta, 1.0, 0.0, 0.0);
     glRotatef(alpha, 0.0, 0.0, 1.0);
 
-    glDrawElements(GL_POINTS, 4 * QUADNUM, GL_UNSIGNED_INT, quad);
+	int * indices;
+	indices = malloc(vertex_array_length*sizeof(GLuint));
+	for (int i = 0; i<vertex_array_length; i++)
+	{
+		indices[i] = i;
+	}
+
+    glDrawElements(GL_POINTS, vertex_array_length, GL_UNSIGNED_INT, indices);
+	//glDrawElements(GL_POINTS, VERTEXNUM, GL_UNSIGNED_INT, quad);
 
     glfwSwapBuffers(window);
 }
@@ -199,76 +221,6 @@ void init_opengl(void)
 
 
 //========================================================================
-// Modify the height of each vertex according to the pressure
-//========================================================================
-
-void adjust_grid(void)
-{
-    int pos;
-    int x, y, z;
-
-    for (y = 0; y < GRIDH;  y++)
-    {
-        for (x = 0;  x < GRIDW;  x++)
-        {
-			for(z = 0; z < GRIDD; z++)
-			{
-				pos = (y * GRIDW * GRIDD) + (x* GRIDD) + z;
-				vertex[pos].z = (float) (p[x][y] * (1.0 / 50.0)) + (z * INTERFRAME_HEIGHT_SPACING_PX);
-			}
-        }
-    }
-}
-
-
-//========================================================================
-// Calculate wave propagation
-//========================================================================
-
-void calc_grid(void)
-{
-    int x, y, x2, y2;
-    double time_step = dt * ANIMATION_SPEED;
-
-    // Compute accelerations
-    for (x = 0;  x < GRIDW;  x++)
-    {
-        x2 = (x + 1) % GRIDW;
-        for(y = 0; y < GRIDH; y++)
-            ax[x][y] = p[x][y] - p[x2][y];
-    }
-
-    for (y = 0;  y < GRIDH;  y++)
-    {
-        y2 = (y + 1) % GRIDH;
-        for(x = 0; x < GRIDW; x++)
-            ay[x][y] = p[x][y] - p[x][y2];
-    }
-
-    // Compute speeds
-    for (x = 0;  x < GRIDW;  x++)
-    {
-        for (y = 0;  y < GRIDH;  y++)
-        {
-            vx[x][y] = vx[x][y] + ax[x][y] * time_step;
-            vy[x][y] = vy[x][y] + ay[x][y] * time_step;
-        }
-    }
-
-    // Compute pressure
-    for (x = 1;  x < GRIDW;  x++)
-    {
-        x2 = x - 1;
-        for (y = 1;  y < GRIDH;  y++)
-        {
-            y2 = y - 1;
-            p[x][y] = p[x][y] + (vx[x2][y] - vx[x][y] + vy[x][y2] - vy[x][y]) * time_step;
-        }
-    }
-}
-
-
-//========================================================================
 // Print errors
 //========================================================================
 
@@ -293,7 +245,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             glfwSetWindowShouldClose(window, GLFW_TRUE);
             break;
         case GLFW_KEY_SPACE:
-            init_grid();
             break;
         case GLFW_KEY_LEFT:
             alpha += 5;
@@ -434,35 +385,13 @@ int main(int argc, char* argv[])
 
     // Initialize simulation
     init_vertices();
-    init_grid();
-    adjust_grid();
 
     // Initialize timer
     t_old = glfwGetTime() - 0.01;
 
     while (!glfwWindowShouldClose(window))
     {
-        t = glfwGetTime();
-        dt_total = t - t_old;
-        t_old = t;
-
-        // Safety - iterate if dt_total is too large
-        while (dt_total > 0.f)
-        {
-            // Select iteration time step
-            dt = dt_total > MAX_DELTA_T ? MAX_DELTA_T : dt_total;
-            dt_total -= dt;
-
-            // Calculate wave propagation
-            calc_grid();
-        }
-
-        // Compute height of each vertex
-        adjust_grid();
-
-        // Draw wave grid to OpenGL display
         draw_scene(window);
-
         glfwPollEvents();
     }
 
