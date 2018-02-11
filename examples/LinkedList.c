@@ -94,7 +94,7 @@ void GetLast(struct Node * node, struct Node ** last)
 
 void PrintElements(struct Node node)
 {
-	OutputDebugString("Printing list elements:\r\n");
+	//OutputDebugString("Printing list elements:\r\n");
 	char debugString[200] = { 0 };
 
 	int element = 0;
@@ -102,8 +102,8 @@ void PrintElements(struct Node node)
 	struct Node * current = &node;
 	while (current->vertex != NULL)
 	{
-		sprintf(debugString, "Element %d, Vertex: [X:%.1f] [Y:%.1f] [Z:%.1f] [R:%.1f] [G:%.1f] [B:%.1f]\r\n", element, current->vertex->x, current->vertex->y, current->vertex->z, current->vertex->r, current->vertex->g, current->vertex->b);
-		OutputDebugString(debugString);
+		//sprintf(debugString, "Element %d, Vertex: [X:%.1f] [Y:%.1f] [Z:%.1f] [R:%.1f] [G:%.1f] [B:%.1f]\r\n", element, current->vertex->x, current->vertex->y, current->vertex->z, current->vertex->r, current->vertex->g, current->vertex->b);
+		//OutputDebugString(debugString);
 		element++;
 		if (element >= count)
 		{

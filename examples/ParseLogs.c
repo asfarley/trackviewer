@@ -24,7 +24,7 @@ void ParseTextfile(FILE * fp, struct Node ** linked_list)
 	while (fgets(line, sizeof(line), fp))
 	{
 		len = strlen(line);
-		OutputDebugString("Parsing line\r\n");
+		//OutputDebugString("Parsing line\r\n");
 		//OutputDebugString(line);
 
 		char * pch;
@@ -45,13 +45,13 @@ void ParseTextfile(FILE * fp, struct Node ** linked_list)
 			switch (index)
 			{
 			case 0:
-				new_vertex->x = (float) val;
+				new_vertex->x = (float) val / 10.0;
 				break;
 			case 1: 
-				new_vertex->y = (float)val;
+				new_vertex->y = (float)val / 10.0;
 				break;
 			case 2: 
-				new_vertex->z = (float)val;
+				new_vertex->z = (float)val / 10.0;
 				break;
 			case 3: 
 				new_vertex->r = val / 255.0;
@@ -70,8 +70,8 @@ void ParseTextfile(FILE * fp, struct Node ** linked_list)
 			index++;
 		}
 
-		sprintf(debugString, "new_vertex[%d]: %.1f, %.1f, %.1f, %.1f, %.1f, %.1f \r\n", index, new_vertex->x, new_vertex->y, new_vertex->z, new_vertex->r, new_vertex->g, new_vertex->b);
-		OutputDebugString(debugString);
+		//sprintf(debugString, "new_vertex[%d]: %.1f, %.1f, %.1f, %.1f, %.1f, %.1f \r\n", index, new_vertex->x, new_vertex->y, new_vertex->z, new_vertex->r, new_vertex->g, new_vertex->b);
+		//OutputDebugString(debugString);
 
 		if (created_first_element)
 		{

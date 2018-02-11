@@ -34,12 +34,11 @@
 #define ANIMATION_SPEED 10.0
 
 GLfloat alpha = 210.f, beta = -70.f;
-GLfloat zoom = 2.f;
+GLfloat z = 0.f;
+GLfloat zoom = 1000.f;
 
 double cursorX;
 double cursorY;
-
-
 
 #define GRIDW 5
 #define GRIDH 5
@@ -51,6 +50,7 @@ struct Vertex vertex[VERTEXNUM];
 struct Node * linked_list;
 struct Vertex * vertex_array = NULL;
 int vertex_array_length = 0;
+int * indices;
 
 /* The grid will look like this:
  *
@@ -129,17 +129,10 @@ void draw_scene(GLFWwindow* window)
     glLoadIdentity();
 
     // Move back
-    glTranslatef(0.0, 0.0, -zoom);
+    glTranslatef(0.0, z, -zoom);
     // Rotate the view
     glRotatef(beta, 1.0, 0.0, 0.0);
     glRotatef(alpha, 0.0, 0.0, 1.0);
-
-	int * indices;
-	indices = malloc(vertex_array_length*sizeof(GLuint));
-	for (int i = 0; i<vertex_array_length; i++)
-	{
-		indices[i] = i;
-	}
 
     glDrawElements(GL_POINTS, vertex_array_length, GL_UNSIGNED_INT, indices);
 	//glDrawElements(GL_POINTS, VERTEXNUM, GL_UNSIGNED_INT, quad);
@@ -165,7 +158,7 @@ void init_opengl(void)
     glVertexPointer(3, GL_FLOAT, sizeof(struct Vertex), vertex);
     glColorPointer(3, GL_FLOAT, sizeof(struct Vertex), &vertex[0].r); // Pointer to the first color
 
-    glPointSize(10.0);
+    glPointSize(2.0);
 
     // Background color is black
     glClearColor(0, 0, 0, 0);
@@ -205,10 +198,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             alpha -= 5;
             break;
         case GLFW_KEY_UP:
-            beta -= 5;
+            //beta -= 5;
+			z -= 1;
             break;
         case GLFW_KEY_DOWN:
-            beta += 5;
+            //beta += 5;
+			z += 1;
             break;
         case GLFW_KEY_PAGE_UP:
             zoom -= 0.25f;
@@ -252,7 +247,8 @@ void cursor_position_callback(GLFWwindow* window, double x, double y)
     if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
     {
         alpha += (GLfloat) (x - cursorX) / 10.f;
-        beta += (GLfloat) (y - cursorY) / 10.f;
+        //beta += (GLfloat) (y - cursorY) / 10.f;
+		z -= (GLfloat)(y - cursorY) / 10.f;
 
         cursorX = x;
         cursorY = y;
@@ -266,7 +262,7 @@ void cursor_position_callback(GLFWwindow* window, double x, double y)
 
 void scroll_callback(GLFWwindow* window, double x, double y)
 {
-    zoom += (float) y / 4.f;
+    zoom += (float) 15.f * y;
     if (zoom < 0)
         zoom = 0;
 }
@@ -347,6 +343,12 @@ int main(int argc, char* argv[])
 
 	PrintElements(*linked_list);
 	update_vertex_array();
+
+	indices = malloc(vertex_array_length * sizeof(GLuint));
+	for (int i = 0; i<vertex_array_length; i++)
+	{
+		indices[i] = i;
+	}
 
     // Initialize simulation
     //init_vertices();
