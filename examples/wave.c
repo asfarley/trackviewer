@@ -23,6 +23,7 @@
 #include <linmath.h>
 #include "wave.h"
 #include "LinkedList.h"
+#include "ParseLogs.h"
 
 #define INTERFRAME_HEIGHT_SPACING_PX 1
 
@@ -47,7 +48,7 @@ double cursorY;
 
 GLuint quad[VERTEXNUM];
 struct Vertex vertex[VERTEXNUM];
-struct Node linked_list;
+struct Node * linked_list;
 struct Vertex * vertex_array = NULL;
 int vertex_array_length = 0;
 
@@ -65,8 +66,8 @@ int vertex_array_length = 0;
 
 void update_vertex_array()
 {
-	ToArray(linked_list, &vertex_array);
-	vertex_array_length = NumberOfElements(linked_list);
+	ToArray(*linked_list, &vertex_array);
+	vertex_array_length = NumberOfElements(*linked_list);
 	glVertexPointer(3, GL_FLOAT, sizeof(struct Vertex), vertex_array);
 	glColorPointer(3, GL_FLOAT, sizeof(struct Vertex), &(vertex_array[0].r)); // Pointer to the first color
 }
@@ -110,55 +111,6 @@ void init_vertices(void)
     {        
 		quad[i] =i;
     }
-
-	struct Vertex first;
-	first.x = 0;
-	first.y = 0;
-	first.z = 0;
-	first.r = 100;
-	first.g = 100;
-	first.b = 100;
-
-	linked_list.vertex = &first;
-	linked_list.previous = NULL;
-	linked_list.next = NULL;
-
-	struct Vertex second;
-	struct Vertex third;
-
-	second.x = 1;
-	second.y = 1;
-	second.z = 1;
-	second.r = 200;
-	second.g = 200;
-	second.b = 200;
-
-	third.x = 2;
-	third.y = 2;
-	third.z = 2;
-	third.r = 220;
-	third.g = 220;
-	third.b = 220;
-
-	char debugString[100] = { 0 };
-
-	int count = NumberOfElements(linked_list);
-	sprintf(debugString, "linked_list: %d elements \r\n", count);
-	OutputDebugString(debugString);
-
-	AddElement(&linked_list, &second);
-
-	count = NumberOfElements(linked_list);
-	sprintf(debugString, "linked_list: %d elements \r\n", count);
-	OutputDebugString(debugString);
-
-	AddElement(&linked_list, &third);
-
-	count = NumberOfElements(linked_list);
-	sprintf(debugString, "linked_list: %d elements \r\n", count);
-	OutputDebugString(debugString);
-
-	PrintElements(linked_list);
 
 	update_vertex_array();
 }
@@ -383,8 +335,21 @@ int main(int argc, char* argv[])
     // Initialize OpenGL
     init_opengl();
 
+	char const* filename = "C:\\VTCProject\\Glitter\\Glitter\\Vendor\\glfw\\examples\\Debug\\vertex.txt";
+	FILE * fp = fopen(filename, "r");
+	ParseTextfile(fp, &linked_list);
+
+	char debugString[100] = { 0 };
+	
+	int count = NumberOfElements(*linked_list);
+	sprintf(debugString, "linked_list: %d elements \r\n", count);
+	OutputDebugString(debugString);
+
+	PrintElements(*linked_list);
+	update_vertex_array();
+
     // Initialize simulation
-    init_vertices();
+    //init_vertices();
 
     // Initialize timer
     t_old = glfwGetTime() - 0.01;
