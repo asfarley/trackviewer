@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\CMakeFiles\9b34ef20569b0a71aa80c3355b25bcad\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{2860B801-3D88-3CB4-9193-BC7422275BC9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
