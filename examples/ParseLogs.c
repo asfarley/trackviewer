@@ -3,10 +3,10 @@
 #include <math.h>
 #include <string.h>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "..\deps\glad\glad.h"
+#include "..\include\GLFW\glfw3.h"
 
-#include <linmath.h>
+#include "..\deps\linmath.h"
 #include "wave.h"
 #include "LinkedList.h"
 

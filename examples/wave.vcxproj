@@ -60,7 +60,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">wave.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">wave</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
@@ -87,7 +87,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\VTCProject\Glitter\Glitter\Vendor\glfw\deps;C:\VTCProject\Glitter\Glitter\Vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\glfw\deps;.\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
@@ -104,7 +104,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\VTCProject\Glitter\Glitter\Vendor\glfw\deps;C:\VTCProject\Glitter\Glitter\Vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\glfw\deps;.\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
       <AdditionalIncludeDirectories>C:\VTCProject\Glitter\Glitter\Vendor\glfw\deps;C:\VTCProject\Glitter\Glitter\Vendor\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -116,7 +116,7 @@
     </Midl>
     <Link>
       <AdditionalOptions>%(AdditionalOptions)  /machine:X86</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\src\Debug\glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\build\glfw3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
@@ -269,77 +269,24 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HC:/VTCProject/Glitter/Glitter/Vendor/glfw -BC:/VTCProject/Glitter/Glitter/Vendor/glfw --check-stamp-file C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HC:/VTCProject/Glitter/Glitter/Vendor/glfw -BC:/VTCProject/Glitter/Glitter/Vendor/glfw --check-stamp-file C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HC:/VTCProject/Glitter/Glitter/Vendor/glfw -BC:/VTCProject/Glitter/Glitter/Vendor/glfw --check-stamp-file C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HC:/VTCProject/Glitter/Glitter/Vendor/glfw -BC:/VTCProject/Glitter/Glitter/Vendor/glfw --check-stamp-file C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeFiles/generate.stamp
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/VTCProject/Glitter/Glitter/Vendor/glfw/examples/CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
-    </CustomBuild>
+    <ProjectReference Include="..\src\glfw.vcxproj">
+      <Project>{049fa41b-432c-3a47-bba2-dec77e47610e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\deps\glad.c" />
     <ClCompile Include="LinkedList.c" />
     <ClCompile Include="ParseLogs.c" />
-    <ClInclude Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\deps\glad\glad.h" />
-    <ClCompile Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\wave.c" />
+    <ClCompile Include="wave.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\deps\glad\glad.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="ParseLogs.h" />
     <ClInclude Include="wave.h" />
-    <ResourceCompile Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\examples\glfw.rc" />
-    <ClCompile Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\deps\glad.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="C:\VTCProject\Glitter\Glitter\Vendor\glfw\src\glfw.vcxproj">
-      <Project>{049FA41B-432C-3A47-BBA2-DEC77E47610E}</Project>
-      <Name>glfw</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

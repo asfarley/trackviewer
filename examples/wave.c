@@ -17,10 +17,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "..\deps\glad\glad.h"
+#include "..\include\GLFW\glfw3.h"
 
-#include <linmath.h>
+#include "..\deps\linmath.h"
 #include "wave.h"
 #include "LinkedList.h"
 #include "ParseLogs.h"
@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
     // Initialize OpenGL
     init_opengl();
 
-	char const* filename = "C:\\VTCProject\\Glitter\\Glitter\\Vendor\\glfw\\examples\\Debug\\vertex.txt";
+	char const* filename = "C:\\VTCProject\\trackviewer\\build\\vertex.txt";
 	FILE * fp = fopen(filename, "r");
 	ParseTextfile(fp, &linked_list);
 
