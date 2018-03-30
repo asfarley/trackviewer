@@ -6,7 +6,6 @@ _ReSharper*
 *.suo
 *.dir
 *.vcxproj*
-*.sln
 Win32
 x64
 Debug
